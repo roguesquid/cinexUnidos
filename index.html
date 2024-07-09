@@ -321,7 +321,6 @@
       .container-asientos {
         overflow: hidden;
         display: grid;
-        grid-template-columns: repeat(15, 25px);
         align-self: center;
         gap: 0.125rem;
       }
@@ -613,13 +612,32 @@
     //CARGAR ASIENTOS
     async function cargarAsientos(idSala, nombreSala, idShow, asientos) {
       const containerAsientos = document.querySelector(".container-asientos");
+      containerAsientos.innerHTML = "";
 
-      // const claves = Object.keys(asientos);
-      // const valores = Object.values(asientos);
-      // console.log(claves);
-      // console.log(valores);
       const entradas = Object.entries(asientos);
-      entradas.forEach((entrada) => {
+
+      const longitudFilaMasLarga = entradas.reduce((acc, entrada) => {
+        if (entrada[1].length > acc) {
+          return entrada[1].length;
+        }
+        return acc;
+      }, 0);
+
+      containerAsientos.style.gridTemplateColumns = `repeat(${longitudFilaMasLarga}, 25px)`;
+
+      const entradasMismaLongitud = entradas.map((entrada) => {
+        if (entrada[1].length < longitudFilaMasLarga) {
+          const diferencia = longitudFilaMasLarga - entrada[1].length;
+          const asientos = entrada[1];
+          for (let i = 0; i < diferencia; i++) {
+            asientos.push(-1);
+          }
+          return [entrada[0], asientos];
+        }
+        return entrada;
+      });
+
+      entradasMismaLongitud.forEach((entrada) => {
         const divFil = document.createElement("div");
         divFil.textContent = entrada[0];
         containerAsientos.appendChild(divFil);
@@ -648,6 +666,39 @@
         });
       });
       console.log(entradas);
+    }
+
+    async function gestionarAsiento(
+      accion,
+      theatreId,
+      auditoriumId,
+      showTimeId,
+      asiento
+    ) {
+      const URL = `${BASE_URL}/theatres/${theatreId}/auditoriums/${auditoriumId}/showtimes/${showTimeId}/reserve`;
+      let options = {};
+      if (accion === "reservar") {
+        options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            seat: asiento,
+          }),
+        };
+      } else if (accion === "eliminar") {
+        options = {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            seat: asiento,
+          }),
+        };
+      }
+      const data = await fetch(URL, options);
     }
   </script>
 </html>
