@@ -516,7 +516,6 @@
       theatreId: cineSeleccionado,
       auditoriumId: "",
       showTimeId: "",
-      rawSeats: [],
     };
 
     async function cargarCines() {
@@ -652,7 +651,7 @@
               dataIds.rawSeats = show.seats;
               dataIds.auditoriumId = sala.id;
               dataIds.showTimeId = show.id;
-              cargarAsientos(sala.id, show.id, show.seats);
+              cargarAsientos(sala.id, show.id);
               // actualizarAsientos(
               //   cineSeleccionado,
               //   sala.id,
@@ -671,9 +670,17 @@
     let asientosSeleccionados = [];
 
     //CARGAR ASIENTOS
-    async function cargarAsientos(idSala, idShow, asientos) {
+    async function cargarAsientos(idSala, idShow) {
       const containerAsientos = document.querySelector(".container-asientos");
       containerAsientos.innerHTML = "";
+
+      let response = await fetch(
+        `${BASE_URL}/theatres/${cineSeleccionado}/auditoriums/${idSala}/showtimes/${idShow}`
+      );
+
+      let datos = await response.json();
+
+      let asientos = datos.seats;
 
       const entradas = Object.entries(asientos);
       //Dado que todas las filas tienen longitudes distintas, se calcula la de la mas larga
@@ -764,7 +771,6 @@
       asiento
     ) {
       const URL = `${BASE_URL}/theatres/${theatreId}/auditoriums/${auditoriumId}/showtimes/${showTimeId}/reserve`;
-      console.log(`${theatreId} ${auditoriumId} ${showTimeId} ${asiento}`);
       let options = {};
       if (accion === "reservar") {
         options = {
@@ -788,8 +794,6 @@
         };
       }
       const data = await fetch(URL, options);
-      const imprimir = await data.json();
-      console.log(imprimir);
     }
 
     // async function actualizarAsientos(
@@ -805,7 +809,7 @@
     //   const eventSource = new EventSource(URL);
 
     //   eventSource.onmessage = () => {
-    //     cargarAsientos(auditoriumId, showTimeId, asientos);
+    //     cargarAsientos(auditoriumId, showTimeId);
     //   };
     // }
 
@@ -822,11 +826,7 @@
       });
       asientosSeleccionados = [];
       alert("Asientos reservados con éxito");
-      cargarAsientos(
-        dataIds.auditoriumId,
-        dataIds.showTimeId,
-        dataIds.rawSeats
-      );
+      cargarAsientos(dataIds.auditoriumId, dataIds.showTimeId);
     });
   </script>
 </html>
