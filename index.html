@@ -8,12 +8,24 @@
       name="description"
       content="Bienvenido a Cinex Unidos. Disfruta de las últimas películas en tu cine local."
     />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #1e1e1e;
+      }
+    </style>
   </head>
   <body>
     <header>
       <h1>
         <a href="#"
-          ><img src="./images/cinex-unidos.png" alt="Logo Cinex Unidos" />Cinex
+          ><img src="../images/cinex-unidos.png" alt="Logo Cinex Unidos" />Cinex
           Unidos</a
         >
       </h1>
@@ -23,152 +35,34 @@
             <a href="#">Inicio</a>
           </li>
           <li class="item-menu">
-            <a href="./pages/cartelera.html">Cartelera</a>
+            <a href="./estrenos.html">Estrenos</a>
           </li>
           <li class="item-menu">
-            <a href="./pages/estrenos.html">Estrenos</a>
+            <a href="./cines.html">Cines</a>
           </li>
-          <li class="item-menu"><a href="">Eventos</a></li>
-          <li class="item-menu"><a href="">Chucher&iacute;a</a></li>
-          <li class="item-menu"><a href="">Mi cuenta</a></li>
-          <li class="item-menu"><a href="">Contacto</a></li>
+          <li class="item-menu">
+            <a href="./cartelera.html">Cartelera</a>
+          </li>
+          <li class="item-menu">
+            <a href="./chucherias.html">Caramelería</a>
+          </li>
+          <li class="item-menu">
+            <a href="">Contacto</a>
+          </li>
+          <li class="item-menu">
+            <a href="./cuenta.html">Mi cuenta</a>
+          </li>
         </ul>
       </nav>
     </header>
 
-    <!-- dado que cada película la entendemos como un contenido independiente y autónomo para represenrtarla semánticamente usaremos la etiqueta article -->
-    <!-- se usará una etiqueta h1 para representar el título dado que según Jeremy
-    Keith en su libro HTML 5 For Web Designers, se indica que cada etiqueta de
-    seccionado tiene su propio esquema autónomo, por lo que no se debe hacer un seguimiento global en toda la página al nivel de encabezado que se usará -->
     <main>
-      <section class="peliculas-destacadas">
-        <article>
-          <a href="#">
-            <img
-              src="./images/el-lago-de-los-cisnes.jpg"
-              alt="Poster de la película El lago de los cisnes"
-            />
-          </a>
-          <h1>El lago de los cisnes</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/garfield.jpg"
-              alt="Poster de la película Garfield"
-            />
-          </a>
-          <h1>Garfield</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/kung-fu-panda.jpg"
-              alt="Poster de la película Kung Fu Panda"
-            />
-          </a>
-          <h1>Kung Fu Panda</h1>
-        </article>
-      </section>
-
-      <!-- Visualmente no se verán los titulos, pero los dejamos para no afectar la accesibilidad y semántica del sitio web... Los quitaremos luego con CSS -->
-      <section class="cartelera">
-        <article>
-          <a href="#">
-            <img
-              src="./images/hortensias-para-ines.jpg"
-              alt="Poster de la película Hortensias para Inés"
-            />
-          </a>
-          <h1>Hortensias para In&eacute;s</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/azotes-de-barrio.jpg"
-              alt="Poster de la película Azotes de barrio"
-            />
-          </a>
-          <h1>Azotes de barrio</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/amigos-imaginarios.jpg"
-              alt="Poster de la película Amigos Imaginarios"
-            />
-          </a>
-          <h1>Amigos Imaginarios</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img src="./images/tarot.jpg" alt="Poster de la película Tarot" />
-          </a>
-          <h1>Tarot</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/siempre-a-tu-lado.jpg"
-              alt="Poster de la película Siempre a tu lado (Hachiko 2)"
-            />
-          </a>
-          <h1>Siempre a tu lado (Hachiko 2)</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/el-lago-de-los-cisnes.jpg"
-              alt="Poster de la película El lago de los cisnes"
-            />
-          </a>
-          <h1>El lago de los cisnes</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/g-y-k.jpg"
-              alt="Poster de la película Godzilla y Kong"
-            />
-          </a>
-          <h1>Godzilla y Kong</h1>
-        </article>
-        <article>
-          <a href="#">
-            <img
-              src="./images/kung-fu-panda.jpg"
-              alt="Poster de la película Kung Fu Panda 4"
-            />
-          </a>
-          <h1>Kung Fu Panda 4</h1>
-        </article>
-      </section>
-
-      <section class="botones-noticia-cuenta">
-        <nav>
-          <div>
-            <a href=""><strong>Noticias de Cine</strong></a>
-          </div>
-          <div>
-            <a href=""><strong>Crear Cuenta</strong></a>
-          </div>
-        </nav>
-      </section>
-
-      <!-- no sabemos si poner esta sección dado que para poder implementarse necesitariamos usar Geolocation API -->
-      <section class="cine-cerca-de-mi">
-        <img src="" alt="Imagen del cine cerca de mi" />
-        <div>
-          <h1>Cine cerca de m&iacute;</h1>
-          <h2>Direcci&oacute;n</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim porro
-            asperiores magni quo sequi excepturi, mollitia voluptatum fuga in
-            quidem earum quia tenetur consequuntur non incidunt assumenda
-            impedit optio magnam.
-          </p>
-        </div>
-      </section>
+      <div>
+        <h1>Cartelera</h1>
+        <select name="seleccionarCine" id="seleccionarCine"></select>
+      </div>
+      <hr />
+      <section class="peliculas"></section>
     </main>
 
     <footer>
@@ -199,4 +93,27 @@
       </div>
     </footer>
   </body>
+  <script>
+    const cineSelect = document.getElementById("seleccionarCine");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarCines();
+    });
+
+    async function obtenerDatos(url) {
+      const respuesta = await fetch(url);
+      const datos = await respuesta.json();
+      return datos;
+    }
+
+    async function cargarCines() {
+      const theatres = await obtenerDatos("https://cinex.com/api/cines");
+      theatres.forEach((theatre) => {
+        const option = document.createElement("option");
+        option.value = theatre.id;
+        option.textContent = theatre.name;
+        cineSelect.appendChild(option);
+      });
+    }
+  </script>
 </html>
