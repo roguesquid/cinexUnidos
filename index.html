@@ -373,6 +373,54 @@
         footer {
           grid-template-columns: 1fr;
         }
+
+        .info-pelicula-comprar {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .info-pelicula-comprar .detalles {
+          gap: 0.5rem;
+        }
+
+        #container-seleccionar-sala {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .container-ver-asientos {
+          margin: 0 1rem 2rem 1rem;
+          padding: 1rem;
+          overflow: scroll;
+        }
+
+        .container-leyenda-asientos {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .container-asientos {
+          display: grid;
+          align-self: center;
+          gap: 0.125rem;
+        }
+
+        .container-asientos div {
+          color: white;
+        }
+
+        .fila-counter {
+          text-align: center;
+        }
+
+        .ocupado {
+          background-color: #ce2632;
+          color: #ffffff;
+          padding: 0.5rem;
+          border-radius: 6px;
+          cursor: pointer;
+        }
       }
     </style>
   </head>
@@ -796,22 +844,15 @@
       const data = await fetch(URL, options);
     }
 
-    // async function actualizarAsientos(
-    //   theatreId,
-    //   auditoriumId,
-    //   showTimeId,
-    //   asientos
-    // ) {
-    //   const URL = `${BASE_URL}/theatres/${theatreId}/auditoriums/${auditoriumId}/showtimes/${showTimeId}/reservation-updates`;
-    //   const response = await fetch(URL);
-    //   const data = await response.json();
-
-    //   const eventSource = new EventSource(URL);
-
-    //   eventSource.onmessage = () => {
-    //     cargarAsientos(auditoriumId, showTimeId);
-    //   };
-    // }
+    async function actualizarAsientos(theatreId, auditoriumId, showTimeId) {
+      const URL = `${BASE_URL}/theatres/${theatreId}/auditoriums/${auditoriumId}/showtimes/${showTimeId}/reservation-updates`;
+      // const response = await fetch(URL);
+      // const data = await response.json();
+      const eventSource = new EventSource(URL);
+      eventSource.onmessage = (e) => {
+        cargarAsientos(auditoriumId, showTimeId);
+      };
+    }
 
     const botonReservar = document.getElementById("boton-reservar");
     botonReservar.addEventListener("click", (e) => {
@@ -827,6 +868,11 @@
       asientosSeleccionados = [];
       alert("Asientos reservados con éxito");
       cargarAsientos(dataIds.auditoriumId, dataIds.showTimeId);
+      actualizarAsientos(
+        dataIds.theatreId,
+        dataIds.auditoriumId,
+        dataIds.showTimeId
+      );
     });
   </script>
 </html>
