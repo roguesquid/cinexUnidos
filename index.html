@@ -281,7 +281,7 @@
 
       .container-leyenda-asientos {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
       }
 
@@ -295,11 +295,16 @@
         text-align: center;
       }
 
+      .fila-counter {
+        text-align: center;
+      }
+
       .ocupado {
-        background-color: #d5d6d9;
-        color: #333333;
+        background-color: #ce2632;
+        color: #ffffff;
         padding: 0.5rem;
         border-radius: 6px;
+        cursor: pointer;
       }
 
       .disponible {
@@ -318,6 +323,13 @@
         border-radius: 6px;
       }
 
+      .seleccionado-otro {
+        background-color: #2831ad;
+        color: #e6e6e7;
+        padding: 0.5rem;
+        border-radius: 6px;
+      }
+
       .container-asientos {
         overflow: hidden;
         display: grid;
@@ -330,6 +342,26 @@
       }
       /* FIN VISTA COMPRAR ENTRADAS */
 
+      .resumen-compra {
+        margin: 0 8rem;
+      }
+
+      #boton-reservar {
+        display: block;
+        background-color: #ce2632;
+        color: #e6e6e7;
+        padding: 0.5rem;
+        text-align: center;
+        border-radius: 8px;
+        margin-top: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+      }
+
+      #boton-reservar:hover {
+        background-color: #8b1d25;
+      }
       /* MEDIA QUERIES */
       @media (max-width: 768px) {
         .menu-principal ul {
@@ -417,6 +449,9 @@
               <p class="leyenda-estatus-asiento ocupado">Ocupados</p>
               <p class="leyenda-estatus-asiento disponible">Disponibles</p>
               <p class="leyenda-estatus-asiento seleccionado">Seleccionados</p>
+              <p class="leyenda-estatus-asiento seleccionado-otro">
+                Seleccionados por otro usuario
+              </p>
             </div>
             <div class="container-asientos"></div>
           </div>
@@ -425,7 +460,7 @@
           <h1>Asientos Seleccionados</h1>
           <div class="tickets"></div>
           <hr />
-          <form action=""><!--Recordar hacer el prevent default--></form>
+          <a id="boton-reservar">Reservar</a>
         </section>
       </article>
     </main>
@@ -458,6 +493,11 @@
   <script>
     const BASE_URL = "https://cinexunidos-production.up.railway.app";
 
+    let rawSeats = [];
+
+    //GLOBALES
+    let cineSeleccionado = "";
+
     //CARGAR CINES
     const cineSelect = document.getElementById("seleccionarCine");
 
@@ -472,6 +512,13 @@
       return datos;
     }
 
+    const dataIds = {
+      theatreId: cineSeleccionado,
+      auditoriumId: "",
+      showTimeId: "",
+      rawSeats: [],
+    };
+
     async function cargarCines() {
       const theatres = await obtenerDatos(`${BASE_URL}/theatres`);
       theatres.forEach((theatre) => {
@@ -485,7 +532,7 @@
 
     async function cargarCartelera() {
       //Obtengo las salas del cine seleccionado
-      let cineSeleccionado = cineSelect.value;
+      cineSeleccionado = cineSelect.value;
 
       if (cineSelect.selectedIndex === -1) {
         cineSeleccionado = "sambil-chacao";
@@ -499,8 +546,9 @@
       const peliculasContainer = document.querySelector(".peliculas");
       peliculasContainer.innerHTML = "";
 
-      let peliculas = [];
+      let peliculas = []; //Peliculas solo disponibles en el cine seleccionado
 
+      //Lleno el arreglo de peliculas solo con las que hay en ese cine
       salasCine.forEach((sala) => {
         sala.showtimes.forEach((show) => {
           const pelicula = show.movie;
@@ -569,6 +617,7 @@
       );
       ratingDuracionPelicula.textContent = `${pelicula.rating} / ${pelicula.runningTime}`;
       cargarHorasPelicula(idCine, pelicula.name);
+      dataIds.theatreId = idCine;
     }
 
     //CARGAR CARTELERA UNA VEZ ELIGIO CINE
@@ -584,11 +633,12 @@
       salas.forEach((sala) => {
         sala.showtimes.forEach((show) => {
           if (show.movie.name === namePelicula) {
-            console.log(sala);
             const movieHourOption = document.createElement("a");
             movieHourOption.href = "";
             movieHourOption.textContent = show.startTime;
             movieHourOption.classList.add("movie-hour-option");
+
+            //Escucha el evento click
             movieHourOption.addEventListener("click", (e) => {
               e.preventDefault();
               e.target.classList.add("movie-hour-option--selected");
@@ -599,7 +649,16 @@
                     option.classList.remove("movie-hour-option--selected");
                   }
                 });
-              cargarAsientos(sala.id, sala.name, show.id, show.seats);
+              dataIds.rawSeats = show.seats;
+              dataIds.auditoriumId = sala.id;
+              dataIds.showTimeId = show.id;
+              cargarAsientos(sala.id, show.id, show.seats);
+              // actualizarAsientos(
+              //   cineSeleccionado,
+              //   sala.id,
+              //   show.id,
+              //   show.seats
+              // );
             });
             document
               .querySelector("#container-seleccionar-sala")
@@ -609,13 +668,15 @@
       });
     }
 
+    let asientosSeleccionados = [];
+
     //CARGAR ASIENTOS
-    async function cargarAsientos(idSala, nombreSala, idShow, asientos) {
+    async function cargarAsientos(idSala, idShow, asientos) {
       const containerAsientos = document.querySelector(".container-asientos");
       containerAsientos.innerHTML = "";
 
       const entradas = Object.entries(asientos);
-
+      //Dado que todas las filas tienen longitudes distintas, se calcula la de la mas larga
       const longitudFilaMasLarga = entradas.reduce((acc, entrada) => {
         if (entrada[1].length > acc) {
           return entrada[1].length;
@@ -623,8 +684,21 @@
         return acc;
       }, 0);
 
+      //Se crea la primera fila de numeros
+      for (let i = 0; i < longitudFilaMasLarga; i++) {
+        const div = document.createElement("div");
+        if (i !== 0) {
+          div.textContent = i;
+          div.classList.add("fila-counter");
+        } else {
+          div.textContent = "";
+        }
+        containerAsientos.appendChild(div);
+      }
+
       containerAsientos.style.gridTemplateColumns = `repeat(${longitudFilaMasLarga}, 25px)`;
 
+      //Se ponen todos los arreglos de entradas de la misma longitud
       const entradasMismaLongitud = entradas.map((entrada) => {
         if (entrada[1].length < longitudFilaMasLarga) {
           const diferencia = longitudFilaMasLarga - entrada[1].length;
@@ -649,23 +723,37 @@
           if (asiento === 0) {
             div.classList.add("disponible");
           } else if (asiento === 1) {
-            div.classList.add("ocupado");
-          } else {
+            div.classList.add("seleccionado-otro");
+          } else if (asiento === -1) {
             div.classList.add("no-disponible");
+          } else if (asiento === 2) {
+            div.classList.add("ocupado");
           }
+
           div.addEventListener("click", () => {
             if (div.classList.contains("disponible")) {
               div.classList.remove("disponible");
               div.classList.add("seleccionado");
+              asientosSeleccionados.push(`${entrada[0]}${i}`);
             } else if (div.classList.contains("seleccionado")) {
               div.classList.remove("seleccionado");
               div.classList.add("disponible");
+              asientosSeleccionados;
+            } else if (div.classList.contains("ocupado")) {
+              div.classList.remove("ocupado");
+              div.classList.add("disponible");
+              gestionarAsiento(
+                "eliminar",
+                cineSeleccionado,
+                idSala,
+                idShow,
+                `${entrada[0]}${i}`
+              );
             }
           });
           containerAsientos.appendChild(div);
         });
       });
-      console.log(entradas);
     }
 
     async function gestionarAsiento(
@@ -676,6 +764,7 @@
       asiento
     ) {
       const URL = `${BASE_URL}/theatres/${theatreId}/auditoriums/${auditoriumId}/showtimes/${showTimeId}/reserve`;
+      console.log(`${theatreId} ${auditoriumId} ${showTimeId} ${asiento}`);
       let options = {};
       if (accion === "reservar") {
         options = {
@@ -699,6 +788,45 @@
         };
       }
       const data = await fetch(URL, options);
+      const imprimir = await data.json();
+      console.log(imprimir);
     }
+
+    // async function actualizarAsientos(
+    //   theatreId,
+    //   auditoriumId,
+    //   showTimeId,
+    //   asientos
+    // ) {
+    //   const URL = `${BASE_URL}/theatres/${theatreId}/auditoriums/${auditoriumId}/showtimes/${showTimeId}/reservation-updates`;
+    //   const response = await fetch(URL);
+    //   const data = await response.json();
+
+    //   const eventSource = new EventSource(URL);
+
+    //   eventSource.onmessage = () => {
+    //     cargarAsientos(auditoriumId, showTimeId, asientos);
+    //   };
+    // }
+
+    const botonReservar = document.getElementById("boton-reservar");
+    botonReservar.addEventListener("click", (e) => {
+      asientosSeleccionados.forEach((asiento) => {
+        gestionarAsiento(
+          "reservar",
+          dataIds.theatreId,
+          dataIds.auditoriumId,
+          dataIds.showTimeId,
+          asiento
+        );
+      });
+      asientosSeleccionados = [];
+      alert("Asientos reservados con éxito");
+      cargarAsientos(
+        dataIds.auditoriumId,
+        dataIds.showTimeId,
+        dataIds.rawSeats
+      );
+    });
   </script>
 </html>
