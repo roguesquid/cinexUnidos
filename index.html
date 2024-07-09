@@ -81,7 +81,7 @@
         background-color: #e6e6e7;
         border-radius: 16px;
         padding: 1rem;
-        min-height: 100vh;
+        min-height: 100%;
       }
       .container-titulo-cartelera {
         display: flex;
@@ -107,14 +107,14 @@
       /* ESTILOS PELICULAS */
       .peliculas {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1rem;
         align-items: baseline;
         margin-top: 1rem;
       }
       .pelicula {
         border-radius: 8px;
-        padding: 1rem;
+        margin: 1rem;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -195,6 +195,154 @@
         padding: 0.125rem 0;
       }
       /* FIN FOOTER */
+
+      /* VISTAS */
+      /* INICIO VISTA COMPRAR ENTRADAS */
+      .vista-comprar-entrada {
+        display: none;
+      }
+      .info-pelicula-comprar {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: 6rem;
+        padding: 4rem 8rem;
+      }
+      .info-pelicula-comprar .detalles {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+      #nombre-pelicula {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #333333;
+      }
+      #rating-duracion-pelicula {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #888;
+      }
+      #descripcion-pelicula-comprar {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #333333;
+      }
+      #poster-pelicula {
+        width: 100%;
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.67);
+      }
+      #cineSeleccionado {
+        display: inline-block;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #fff;
+        background-color: #ce2632;
+        padding: 0.625rem 1rem;
+        border-radius: 8px;
+      }
+
+      #container-seleccionar-sala {
+        display: flex;
+        margin: 0 8rem;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .movie-hour-option {
+        display: inline-block;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #333;
+        border: 1px solid #333;
+        padding: 0.625rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+      }
+
+      .movie-hour-option:hover {
+        background-color: #333;
+        color: #fff;
+      }
+
+      .movie-hour-option--selected {
+        background-color: #333;
+        color: #fff;
+      }
+
+      .container-ver-asientos {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        background-color: #333333;
+        margin: 0 8rem 4rem 8rem;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+      }
+
+      .container-leyenda-asientos {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .leyenda-estatus-asiento {
+        width: 100%;
+        display: inline-block;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333333;
+        margin-right: 1rem;
+        text-align: center;
+      }
+
+      .ocupado {
+        background-color: #d5d6d9;
+        color: #333333;
+        padding: 0.5rem;
+        border-radius: 6px;
+      }
+
+      .disponible {
+        background-color: #5bb257;
+        color: #333333;
+        padding: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .seleccionado {
+        cursor: pointer;
+        background-color: #161b62;
+        color: #e6e6e7;
+        padding: 0.5rem;
+        border-radius: 6px;
+      }
+
+      .container-asientos {
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(15, 25px);
+        align-self: center;
+        gap: 0.125rem;
+      }
+
+      .container-asientos div {
+        color: white;
+      }
+      /* FIN VISTA COMPRAR ENTRADAS */
+
+      /* MEDIA QUERIES */
+      @media (max-width: 768px) {
+        .menu-principal ul {
+          flex-direction: column;
+        }
+        .item-menu {
+          width: 100%;
+        }
+        footer {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
@@ -235,12 +383,52 @@
     </header>
 
     <main>
-      <div class="container-titulo-cartelera">
-        <h1 class="titulo-cartelera">Cartelera</h1>
-        <select name="seleccionarCine" id="seleccionarCine"></select>
-      </div>
-      <hr />
-      <section class="peliculas"></section>
+      <article id="vista-cartelera">
+        <div class="container-titulo-cartelera">
+          <h1 class="titulo-cartelera">Cartelera</h1>
+          <select name="seleccionarCine" id="seleccionarCine"></select>
+        </div>
+        <hr />
+        <section class="peliculas"></section>
+      </article>
+      <article class="vista-comprar-entrada">
+        <section class="info-pelicula-comprar">
+          <img src="" alt="" id="poster-pelicula" />
+          <div class="detalles">
+            <h1 id="nombre-pelicula"></h1>
+            <p id="rating-duracion-pelicula"></p>
+            <p id="descripcion-pelicula-comprar">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Repellendus est labore nostrum, inventore minima dolorum nulla qui
+              a, beatae quibusdam, quo cum ad corporis hic sapiente molestias
+              fugit enim omnis. Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Vero enim laborum impedit! Reiciendis
+              repudiandae animi voluptas molestiae vitae, possimus repellendus
+              dignissimos esse dicta velit, blanditiis exercitationem illo
+              veniam provident saepe.
+            </p>
+          </div>
+          <!-- <p id="cineSeleccionado"></p> -->
+        </section>
+
+        <section class="comprar-entrada">
+          <div id="container-seleccionar-sala"></div>
+          <div class="container-ver-asientos">
+            <div class="container-leyenda-asientos">
+              <p class="leyenda-estatus-asiento ocupado">Ocupados</p>
+              <p class="leyenda-estatus-asiento disponible">Disponibles</p>
+              <p class="leyenda-estatus-asiento seleccionado">Seleccionados</p>
+            </div>
+            <div class="container-asientos"></div>
+          </div>
+        </section>
+        <section class="resumen-compra">
+          <h1>Asientos Seleccionados</h1>
+          <div class="tickets"></div>
+          <hr />
+          <form action=""><!--Recordar hacer el prevent default--></form>
+        </section>
+      </article>
     </main>
 
     <footer>
@@ -260,7 +448,7 @@
         <strong>Contacto</strong>
         <address>
           <ul>
-            <li><strong>Tel&eacute;fono: </strong>0212-555-5555</li>
+            <li><strong>Tel&eacute;fono: </strong>0212-55sin-corriente</li>
             <li><strong>Celular (Whatsapp): </strong>0424-555-5555</li>
             <li><strong>Fax: </strong>0212-555-5555</li>
           </ul>
@@ -333,7 +521,7 @@
         article.appendChild(img);
 
         const descripcionPelicula = document.createElement("section");
-        descripcionPelicula.classList.add("descripcion-pelicula"); //Estilos en CSS IMPORTANTE HACERLOS
+        descripcionPelicula.classList.add("descripcion-pelicula");
         article.appendChild(descripcionPelicula);
 
         const h1 = document.createElement("h1");
@@ -347,16 +535,119 @@
         const botonComprar = document.createElement("a");
         botonComprar.href = `#`;
         botonComprar.textContent = "Comprar";
-        botonComprar.classList.add("boton-comprar-pelicula"); //Estilos en CSS IMPORTANTE HACERLOS
+        botonComprar.classList.add("boton-comprar-pelicula");
+        botonComprar.addEventListener("click", () => {
+          cambiarAVistaComprarEntrada(
+            cineSeleccionado,
+            cineSelect.textContent,
+            pelicula
+          );
+        });
         descripcionPelicula.appendChild(botonComprar);
 
         peliculasContainer.appendChild(article);
       });
     }
 
+    const vistaCartelera = document.getElementById("vista-cartelera");
+    const vistaComprarEntrada = document.querySelector(
+      ".vista-comprar-entrada"
+    );
+    function cambiarAVistaComprarEntrada(idCine, nombreCine, pelicula) {
+      //La ponemos visible
+      vistaCartelera.style.display = "none";
+      vistaComprarEntrada.style.display = "block";
+
+      //Cargamos los datos de la pelicula
+      const posterPelicula = document.getElementById("poster-pelicula");
+      posterPelicula.src = `${BASE_URL}/${pelicula.poster}`;
+
+      const nombrePelicula = document.getElementById("nombre-pelicula");
+      nombrePelicula.textContent = pelicula.name;
+
+      const ratingDuracionPelicula = document.getElementById(
+        "rating-duracion-pelicula"
+      );
+      ratingDuracionPelicula.textContent = `${pelicula.rating} / ${pelicula.runningTime}`;
+      cargarHorasPelicula(idCine, pelicula.name);
+    }
+
     //CARGAR CARTELERA UNA VEZ ELIGIO CINE
     cineSelect.addEventListener("change", async () => {
       cargarCartelera();
     });
+
+    //CARGAR HORAS DE PELICULA
+    async function cargarHorasPelicula(idCine, namePelicula) {
+      const data = await fetch(`${BASE_URL}/theatres/${idCine}/auditoriums`);
+      const salas = await data.json();
+
+      salas.forEach((sala) => {
+        sala.showtimes.forEach((show) => {
+          if (show.movie.name === namePelicula) {
+            console.log(sala);
+            const movieHourOption = document.createElement("a");
+            movieHourOption.href = "";
+            movieHourOption.textContent = show.startTime;
+            movieHourOption.classList.add("movie-hour-option");
+            movieHourOption.addEventListener("click", (e) => {
+              e.preventDefault();
+              e.target.classList.add("movie-hour-option--selected");
+              e.target.parentElement
+                .querySelectorAll(".movie-hour-option")
+                .forEach((option) => {
+                  if (option !== e.target) {
+                    option.classList.remove("movie-hour-option--selected");
+                  }
+                });
+              cargarAsientos(sala.id, sala.name, show.id, show.seats);
+            });
+            document
+              .querySelector("#container-seleccionar-sala")
+              .appendChild(movieHourOption);
+          }
+        });
+      });
+    }
+
+    //CARGAR ASIENTOS
+    async function cargarAsientos(idSala, nombreSala, idShow, asientos) {
+      const containerAsientos = document.querySelector(".container-asientos");
+
+      // const claves = Object.keys(asientos);
+      // const valores = Object.values(asientos);
+      // console.log(claves);
+      // console.log(valores);
+      const entradas = Object.entries(asientos);
+      entradas.forEach((entrada) => {
+        const divFil = document.createElement("div");
+        divFil.textContent = entrada[0];
+        containerAsientos.appendChild(divFil);
+        entrada[1].forEach((asiento, i) => {
+          if (i === 0) {
+            return;
+          }
+          const div = document.createElement("div");
+          if (asiento === 0) {
+            div.classList.add("disponible");
+          } else if (asiento === 1) {
+            div.classList.add("ocupado");
+          } else {
+            div.classList.add("no-disponible");
+          }
+          div.addEventListener("click", () => {
+            if (div.classList.contains("disponible")) {
+              div.classList.remove("disponible");
+              div.classList.add("seleccionado");
+            } else if (div.classList.contains("seleccionado")) {
+              div.classList.remove("seleccionado");
+              div.classList.add("disponible");
+            }
+          });
+          containerAsientos.appendChild(div);
+        });
+      });
+      console.log(entradas);
+    }
   </script>
 </html>
