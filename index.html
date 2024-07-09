@@ -153,6 +153,48 @@
         font-weight: bold;
       }
       /* FIN MAIN */
+      /* INICIO FOOTER */
+      footer {
+        color: #f8f8f8;
+        display: grid;
+        /* quiero que tenga 3 columnas siempre, excepto en mobile */
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: space-around;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+
+      footer div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      footer div img {
+        width: 24px;
+        margin-right: 0.5rem;
+      }
+
+      footer div strong {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      footer div nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      footer div address {
+        font-style: normal;
+      }
+
+      footer div address ul li {
+        list-style: none;
+        padding: 0.125rem 0;
+      }
+      /* FIN FOOTER */
     </style>
   </head>
   <body>
@@ -171,22 +213,22 @@
             <a href="#">Inicio</a>
           </li>
           <li class="item-menu">
-            <a href="./estrenos.html">Estrenos</a>
+            <a href="#">Estrenos</a>
           </li>
           <li class="item-menu">
-            <a href="./cines.html">Cines</a>
+            <a href="#">Cines</a>
           </li>
           <li class="item-menu">
-            <a href="./cartelera.html">Cartelera</a>
+            <a href="#">Cartelera</a>
           </li>
           <li class="item-menu">
-            <a href="./chucherias.html">Caramelería</a>
+            <a href="#">Caramelería</a>
           </li>
           <li class="item-menu">
-            <a href="">Contacto</a>
+            <a href="#">Contacto</a>
           </li>
           <li class="item-menu">
-            <a href="./cuenta.html">Mi cuenta</a>
+            <a href="#">Mi cuenta</a>
           </li>
         </ul>
       </nav>
@@ -204,10 +246,7 @@
     <footer>
       <div>
         <strong>Direcci&oacute;n principal</strong>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus
-          nihil reiciendis,
-        </p>
+        <p>Cachicamo diciéndole a morrocoy <i>"conchuo"</i></p>
       </div>
       <div>
         <strong>Redes Sociales</strong>
