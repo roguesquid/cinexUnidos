@@ -8,7 +8,14 @@
       name="description"
       content="Bienvenido a Cinex Unidos. Disfruta de las últimas películas en tu cine local."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      /* GENERALES */
       * {
         margin: 0;
         padding: 0;
@@ -16,18 +23,147 @@
       }
 
       body {
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: "Inter", Arial, Helvetica, sans-serif;
         background-color: #1e1e1e;
       }
+
+      select {
+        font-family: "Inter", Arial, Helvetica, sans-serif;
+      }
+      /* INICIO HEADER */
+      .titleLogo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+      }
+
+      .titleLogoImg {
+        width: 200px;
+      }
+      .menu-principal {
+        background-color: #1e1e1e;
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      .menu-principal ul {
+        display: flex;
+        justify-content: space-between;
+        list-style: none;
+        width: 100%;
+      }
+      .item-menu {
+        padding: 0.5rem;
+        background-color: #d5d6d9;
+        width: 128px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .item-menu a {
+        text-decoration: none;
+        color: #1e1e1e;
+        font-weight: bold;
+      }
+
+      .item-menu--actual,
+      .item-menu:hover {
+        background-color: #ce2632;
+      }
+      .item-menu--actual a,
+      .item-menu:hover a {
+        color: #d5d6d9;
+      }
+      /* FIN HEADER */
+      /* INICIO MAIN */
+      main {
+        margin: 1.5rem 1rem;
+        background-color: #e6e6e7;
+        border-radius: 16px;
+        padding: 1rem;
+        min-height: 100vh;
+      }
+      .container-titulo-cartelera {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .titulo-cartelera {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333333;
+      }
+      #seleccionarCine {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 2px solid #333333;
+        font-weight: bold;
+      }
+      hr {
+        border: 1px solid #bfbfbf;
+      }
+
+      /* ESTILOS PELICULAS */
+      .peliculas {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: baseline;
+        margin-top: 1rem;
+      }
+      .pelicula {
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .pelicula img {
+        width: 100%;
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.67);
+      }
+      .descripcion-pelicula {
+        margin-top: 1rem;
+      }
+      .descripcion-pelicula h1 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333333;
+        text-align: center;
+      }
+      .descripcion-pelicula p {
+        margin-top: 0.25rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: #888;
+        text-align: center;
+        line-height: normal;
+      }
+
+      .boton-comprar-pelicula {
+        display: block;
+        background-color: #ce2632;
+        color: #e6e6e7;
+        padding: 0.5rem;
+        text-align: center;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      /* FIN MAIN */
     </style>
   </head>
   <body>
     <header>
-      <h1>
+      <h1 class="titleLogo">
         <a href="#"
-          ><img src="../images/cinex-unidos.png" alt="Logo Cinex Unidos" />Cinex
-          Unidos</a
-        >
+          ><img
+            class="titleLogoImg"
+            src="../images/cinex-unidos.png"
+            alt="Logo Cinex Unidos"
+        /></a>
       </h1>
       <nav class="menu-principal">
         <ul>
@@ -57,8 +193,8 @@
     </header>
 
     <main>
-      <div>
-        <h1>Cartelera</h1>
+      <div class="container-titulo-cartelera">
+        <h1 class="titulo-cartelera">Cartelera</h1>
         <select name="seleccionarCine" id="seleccionarCine"></select>
       </div>
       <hr />
@@ -94,10 +230,14 @@
     </footer>
   </body>
   <script>
+    const BASE_URL = "https://cinexunidos-production.up.railway.app";
+
+    //CARGAR CINES
     const cineSelect = document.getElementById("seleccionarCine");
 
     document.addEventListener("DOMContentLoaded", () => {
       cargarCines();
+      cargarCartelera();
     });
 
     async function obtenerDatos(url) {
@@ -107,13 +247,77 @@
     }
 
     async function cargarCines() {
-      const theatres = await obtenerDatos("https://cinex.com/api/cines");
+      const theatres = await obtenerDatos(`${BASE_URL}/theatres`);
       theatres.forEach((theatre) => {
         const option = document.createElement("option");
         option.value = theatre.id;
         option.textContent = theatre.name;
         cineSelect.appendChild(option);
       });
+      cineSelect.value = "sambil-chacao";
     }
+
+    async function cargarCartelera() {
+      //Obtengo las salas del cine seleccionado
+      let cineSeleccionado = cineSelect.value;
+
+      if (cineSelect.selectedIndex === -1) {
+        cineSeleccionado = "sambil-chacao";
+      }
+
+      const salasCine = await obtenerDatos(
+        `${BASE_URL}/theatres/${cineSeleccionado}/auditoriums`
+      );
+
+      //Referencio el contenedor de las peliculas
+      const peliculasContainer = document.querySelector(".peliculas");
+      peliculasContainer.innerHTML = "";
+
+      let peliculas = [];
+
+      salasCine.forEach((sala) => {
+        sala.showtimes.forEach((show) => {
+          const pelicula = show.movie;
+          if (!peliculas.find((p) => p.id === pelicula.id)) {
+            peliculas.push(pelicula);
+          }
+        });
+      });
+
+      peliculas.forEach((pelicula) => {
+        const article = document.createElement("article");
+        article.classList.add("pelicula");
+
+        const img = document.createElement("img");
+        img.src = `${BASE_URL}/${pelicula.poster}`;
+        img.alt = `Poster de la película ${pelicula.name}`;
+        article.appendChild(img);
+
+        const descripcionPelicula = document.createElement("section");
+        descripcionPelicula.classList.add("descripcion-pelicula"); //Estilos en CSS IMPORTANTE HACERLOS
+        article.appendChild(descripcionPelicula);
+
+        const h1 = document.createElement("h1");
+        h1.textContent = pelicula.name;
+        descripcionPelicula.appendChild(h1);
+
+        const details = document.createElement("p");
+        details.textContent = `${pelicula.rating} / ${pelicula.runningTime}`;
+        descripcionPelicula.appendChild(details);
+
+        const botonComprar = document.createElement("a");
+        botonComprar.href = `#`;
+        botonComprar.textContent = "Comprar";
+        botonComprar.classList.add("boton-comprar-pelicula"); //Estilos en CSS IMPORTANTE HACERLOS
+        descripcionPelicula.appendChild(botonComprar);
+
+        peliculasContainer.appendChild(article);
+      });
+    }
+
+    //CARGAR CARTELERA UNA VEZ ELIGIO CINE
+    cineSelect.addEventListener("change", async () => {
+      cargarCartelera();
+    });
   </script>
 </html>
