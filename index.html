@@ -289,6 +289,7 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
+        justify-content: center;
       }
 
       .leyenda-estatus-asiento {
@@ -481,7 +482,13 @@
         background-color: #8b1d25;
       }
       /* MEDIA QUERIES */
-      @media (max-width: 768px) {
+      @media screen and (max-width: 976px) {
+        .container-leyenda-asientos {
+          grid-template-columns: repeat(auto-fill, 221px);
+        }
+      }
+
+      @media screen and (max-width: 768px) {
         .menu-principal ul {
           flex-direction: column;
         }
@@ -490,6 +497,7 @@
         }
         footer {
           grid-template-columns: 1fr;
+          row-gap: 2rem;
         }
 
         .info-pelicula-comprar {
